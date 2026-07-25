@@ -3,6 +3,10 @@ name: PVS-Studio C++ Static Analysis
 on:
   workflow_dispatch:
 
+permissions:
+  contents: read
+  security-events: write
+
 jobs:
   analysis:
     runs-on: ubuntu-latest
@@ -12,15 +16,11 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          # 1. Современный способ добавления GPG-ключа (устраняет предупреждение apt-key)
           wget -q -O - https://files.pvs-studio.com/etc/pubkey.txt \
             | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/pvs-studio.gpg --import
           sudo chmod 644 /etc/apt/trusted.gpg.d/pvs-studio.gpg
-          
-          # 2. ДОБАВЛЕН sudo перед wget, чтобы избежать "Permission denied"
           sudo wget -O /etc/apt/sources.list.d/viva64.list \
             https://files.pvs-studio.com/etc/viva64.list
-            
           sudo apt-get update
           sudo apt-get install -y pvs-studio cmake build-essential
 
@@ -42,7 +42,7 @@ jobs:
           plog-converter -t sarif -o pvs-studio-report.sarif -a ALL C++/build/pvs.log
 
       - name: Upload SARIF to GitHub Security tab
-        uses: github/codeql-action/upload-sarif@v3
+        uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: pvs-studio-report.sarif
           category: pvs-studio
