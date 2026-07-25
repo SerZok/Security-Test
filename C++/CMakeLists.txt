@@ -4,9 +4,7 @@ project(Security-Test VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Для наглядности уязвимостей отключаем некоторые предупреждения компилятора
 add_compile_options(-w)
-add_compile_options(-Werror)
 
 add_executable(security_test
     src/main.cpp
@@ -15,6 +13,13 @@ add_executable(security_test
     src/use_after_free.cpp
     src/weak_crypto.cpp
     src/hardcoded_secrets.cpp
+    src/integer_overflow.cpp
+    src/memory_leak.cpp
+    src/invalid_free.cpp
+    src/out_of_bounds.cpp
+    src/divide_zero.cpp
+    src/null_pointer.cpp
+    src/heap_overflow.cpp
 )
 
 find_package(OpenSSL QUIET)
