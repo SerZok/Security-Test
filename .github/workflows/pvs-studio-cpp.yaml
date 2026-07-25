@@ -1,0 +1,48 @@
+# Пример анализа C++ проекта с помощью PVS-Studio
+name: PVS-Studio C++ Static Analysis
+
+on:
+  workflow_dispatch:
+jobs:
+  analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Dependencies
+        run: |
+          wget -q -O - https://files.pvs-studio.com/etc/pubkey.txt \
+            | sudo apt-key add -
+          wget -O /etc/apt/sources.list.d/viva64.list \
+            https://files.pvs-studio.com/etc/viva64.list
+            
+          sudo apt update
+          sudo apt install -y pvs-studio cmake build-essential
+
+      - name: Activate PVS-Studio License
+        run: pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
+
+      - name: Build project
+        run: |
+          cd C++ 
+          mkdir -p build && cd build
+          cmake -G "Unix Makefiles" ..
+          cmake --build .
+
+      - name: Analyze
+        # Документация по анализу C++ проектов на Linux:
+        # https://pvs-studio.ru/ru/docs/manual/0036/
+        run: |
+          pvs-studio-analyzer analyze -o pvs.log -j
+
+      - name: Convert report to JSON
+        run: |
+          plog-converter -t json -o ./ -a ALL -n pvs-studio-report pvs.log
+
+      - name: Upload report
+        uses: actions/upload-artifact@v4
+        with:
+          name: pvs-studio-report
+          path: pvs-studio-report.json
+          if-no-files-found: ignore
