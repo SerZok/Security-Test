@@ -13,12 +13,13 @@ jobs:
       - name: Install Dependencies
         run: |
           wget -q -O - https://files.pvs-studio.com/etc/pubkey.txt \
-            | sudo apt-key add -
-          wget -O /etc/apt/sources.list.d/viva64.list \
+            | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/pvs-studio.gpg --import
+          sudo chmod 644 /etc/apt/trusted.gpg.d/pvs-studio.gpg
+          sudo wget -O /etc/apt/sources.list.d/viva64.list \
             https://files.pvs-studio.com/etc/viva64.list
             
-          sudo apt update
-          sudo apt install -y pvs-studio cmake build-essential
+          sudo apt-get update
+          sudo apt-get install -y pvs-studio cmake build-essential
 
       - name: Activate PVS-Studio License
         run: pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
