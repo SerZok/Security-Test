@@ -1,8 +1,8 @@
-# Пример анализа C++ проекта с помощью PVS-Studio
 name: PVS-Studio C++ Static Analysis
 
 on:
   workflow_dispatch:
+
 jobs:
   analysis:
     runs-on: ubuntu-latest
@@ -12,13 +12,17 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          # 1. Современный способ добавления GPG-ключа (устраняет предупреждение apt-key)
           wget -q -O - https://files.pvs-studio.com/etc/pubkey.txt \
-            | sudo apt-key add -
-          wget -O /etc/apt/sources.list.d/viva64.list \
+            | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/pvs-studio.gpg --import
+          sudo chmod 644 /etc/apt/trusted.gpg.d/pvs-studio.gpg
+          
+          # 2. ДОБАВЛЕН sudo перед wget, чтобы избежать "Permission denied"
+          sudo wget -O /etc/apt/sources.list.d/viva64.list \
             https://files.pvs-studio.com/etc/viva64.list
             
-          sudo apt update
-          sudo apt install -y pvs-studio cmake build-essential
+          sudo apt-get update
+          sudo apt-get install -y pvs-studio cmake build-essential
 
       - name: Activate PVS-Studio License
         run: pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
@@ -30,8 +34,6 @@ jobs:
           cmake --build C++/build
 
       - name: Analyze
-        # Документация по анализу C++ проектов на Linux:
-        # https://pvs-studio.ru/ru/docs/manual/0036/
         run: |
           pvs-studio-analyzer analyze -f C++/build/compile_commands.json -o C++/build/pvs.log -j
 
