@@ -13,13 +13,12 @@ jobs:
       - name: Install Dependencies
         run: |
           wget -q -O - https://files.pvs-studio.com/etc/pubkey.txt \
-            | sudo gpg --no-default-keyring --keyring gnupg-ring:/etc/apt/trusted.gpg.d/pvs-studio.gpg --import
-          sudo chmod 644 /etc/apt/trusted.gpg.d/pvs-studio.gpg
-          sudo wget -O /etc/apt/sources.list.d/viva64.list \
+            | sudo apt-key add -
+          wget -O /etc/apt/sources.list.d/viva64.list \
             https://files.pvs-studio.com/etc/viva64.list
             
-          sudo apt-get update
-          sudo apt-get install -y pvs-studio cmake build-essential
+          sudo apt update
+          sudo apt install -y pvs-studio cmake build-essential
 
       - name: Activate PVS-Studio License
         run: pvs-studio-analyzer credentials ${{ secrets.PVS_STUDIO_CREDENTIALS }}
@@ -36,13 +35,12 @@ jobs:
         run: |
           pvs-studio-analyzer analyze -f C++/build/compile_commands.json -o C++/build/pvs.log -j
 
-      - name: Convert report to JSON
+      - name: Convert report to SARIF
         run: |
-          plog-converter -t json -o ./ -a ALL -n pvs-studio-report C++/build/pvs.log
+          plog-converter -t sarif -o pvs-studio-report.sarif -a ALL C++/build/pvs.log
 
-      - name: Upload report
-        uses: actions/upload-artifact@v4
+      - name: Upload SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@v3
         with:
-          name: pvs-studio-report
-          path: pvs-studio-report.json
-          if-no-files-found: ignore
+          sarif_file: pvs-studio-report.sarif
+          category: pvs-studio
