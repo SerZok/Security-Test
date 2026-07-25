@@ -1,6 +1,7 @@
 // CWE-476: Null pointer dereference - разыменование нулевого указателя
 #include "null_pointer.h"
 #include <iostream>
+#include <cstring>
 
 void dereference_null_pointer()
 {
