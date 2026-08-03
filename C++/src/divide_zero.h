@@ -1,4 +1,3 @@
-// CWE-369: Divide by zero - деление на ноль
 #ifndef DIVIDE_ZERO_H
 #define DIVIDE_ZERO_H
 

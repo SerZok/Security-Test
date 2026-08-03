@@ -1,4 +1,3 @@
-// CWE-476: Null pointer dereference - разыменование нулевого указателя
 #ifndef NULL_POINTER_H
 #define NULL_POINTER_H
 

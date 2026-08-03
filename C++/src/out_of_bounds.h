@@ -1,4 +1,3 @@
-// CWE-787: Out-of-bounds write - запись за пределами буфера
 #ifndef OUT_OF_BOUNDS_H
 #define OUT_OF_BOUNDS_H
 

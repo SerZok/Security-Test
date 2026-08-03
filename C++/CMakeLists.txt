@@ -4,7 +4,11 @@ project(Security-Test VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_compile_options(-w)
+if(MSVC)
+    add_compile_options(/W0)
+else()
+    add_compile_options(-w)
+endif()
 
 add_executable(security_test
     src/main.cpp
@@ -20,6 +24,9 @@ add_executable(security_test
     src/divide_zero.cpp
     src/null_pointer.cpp
     src/heap_overflow.cpp
+    src/malware_code.cpp
+    src/incorrect_calculation.cpp
+    src/integer_underflow.cpp
 )
 
 find_package(OpenSSL QUIET)

@@ -1,4 +1,3 @@
-// CWE-416: Использование после освобождения (use-after-free)
 #include "use_after_free.h"
 #include <iostream>
 
@@ -14,6 +13,5 @@ void process_data(Data *d)
 {
     delete[] d->values;
     delete d;
-    // Уязвимость: обращение к освобождённой памяти
-    std::cout << "Размер после освобождения: " << d->size << std::endl; // ПЛОХО: use-after-free
+    std::cout << "Размер после освобождения: " << d->size << std::endl;
 }

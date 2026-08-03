@@ -1,4 +1,3 @@
-// CWE-190: Integer overflow with leading to buffer overflow
 #ifndef INTEGER_OVERFLOW_H
 #define INTEGER_OVERFLOW_H
 

@@ -1,4 +1,3 @@
-// CWE-327: Использование небезопасного криптографического алгоритма
 #include "weak_crypto.h"
 #include <iostream>
 
@@ -10,7 +9,6 @@
 std::string hash_password_weak(const std::string &password)
 {
 #ifdef HAS_OPENSSL
-    // Уязвимость: использование MD5 для хеширования паролей
     unsigned char digest[MD5_DIGEST_LENGTH];
     MD5(reinterpret_cast<const unsigned char *>(password.c_str()),
         password.length(), digest);
@@ -20,7 +18,7 @@ std::string hash_password_weak(const std::string &password)
     {
         sprintf(output + (i * 2), "%02x", digest[i]);
     }
-    return std::string(output); // ПЛОХО: MD5 небезопасен
+    return std::string(output);
 #else
     return "md5_hash_placeholder";
 #endif
@@ -28,8 +26,6 @@ std::string hash_password_weak(const std::string &password)
 
 std::string encrypt_data_weak(const std::string &data, const std::string &key)
 {
-    // Упрощённый пример: DES с ECB режимом (небезопасно)
-    // В реальности нужно использовать AES с CBC/GCM
     std::cout << "Шифрование с помощью DES (слабо)" << std::endl;
-    return "encrypted_placeholder"; // ПЛОХО: DES устарел
+    return "encrypted_placeholder";
 }

@@ -1,4 +1,3 @@
-// CWE-476: Null pointer dereference - разыменование нулевого указателя
 #include "null_pointer.h"
 #include <iostream>
 #include <cstring>
@@ -7,16 +6,14 @@ void dereference_null_pointer()
 {
     int *ptr = nullptr;
 
-    // Уязвимость: разыменование null-указателя
-    *ptr = 42; // ПЛОХО: разыменование nullptr
+    *ptr = 42;
 }
 
 void null_pointer_string()
 {
     char *str = nullptr;
 
-    // Уязвимость: передача null-указателя в strlen
-    size_t len = strlen(str); // ПЛОХО: str == nullptr
+    size_t len = strlen(str);
     std::cout << "Length: " << len << std::endl;
 }
 
@@ -30,14 +27,12 @@ void null_pointer_member_access()
 
     Data *data = nullptr;
 
-    // Уязвимость: доступ к члену через null-указатель
-    data->value = 100; // ПЛОХО: data == nullptr
+    data->value = 100;
 }
 
 void null_check_missing(int *ptr)
 {
-    // Уязвимость: отсутствует проверка на null
-    int value = *ptr; // ПЛОХО: ptr может быть nullptr
+    int value = *ptr;
     std::cout << "Value: " << value << std::endl;
 }
 
